@@ -6,6 +6,7 @@ public class ModelTester {
 		// TODO Auto-generated method stub
 		System.out.println("Hello world");
 		System.out.print("test one for github");
+		System.out.print("test Two for github");
 	}
 
 }
