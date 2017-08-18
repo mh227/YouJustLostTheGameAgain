@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+targetNamespace="https://www.w3schools.com"
+xmlns="https://www.w3schools.com"
+elementFormDefault="qualified">
+
+  <xs:element name="map" type="map"/>
+
+  <xs:complexType name="map">
+    <xs:all>
+      <xs:element name="mapIntro" type="xs:string" minOccurs="0"/>
+      <xs:element name="rooms" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="room" type="room" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="characters" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="npc" type="gameNPC"/>
+              <xs:element name="player" type="playerCharacter"/>
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="room">
+    <xs:all>
+      <xs:element name="coordX" type="xs:int"/>
+      <xs:element name="coordY" type="xs:int"/>
+      <xs:element name="items" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="healingItem" type="healingItem"/>
+              <xs:element name="useItem" type="useItem"/>
+              <xs:element name="weapon" type="weaponItem"/>
+              <xs:element name="armor" type="armorItem"/>
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="roamable" type="xs:boolean"/>
+      <xs:element name="shortDescription" type="xs:string" minOccurs="0"/>
+      <xs:element name="longDescription" type="xs:string" minOccurs="0"/>
+      <xs:element name="exits" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="exit" type="gameExit" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="objects" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="object" type="gameObject" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="healingItem">
+    <xs:all>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="shortDescription" type="xs:string" minOccurs="0"/>
+      <xs:element name="longDescription" type="xs:string" minOccurs="0"/>
+      <xs:element name="amountHealed" type="xs:int"/>
+      <xs:element name="uses" type="xs:int"/>
+      <xs:element name="boost" type="xs:boolean"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="useItem">
+    <xs:all>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="shortDescription" type="xs:string" minOccurs="0"/>
+      <xs:element name="longDescription" type="xs:string" minOccurs="0"/>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="matchingIds" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="matchingId" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="weaponItem">
+    <xs:all>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="shortDescription" type="xs:string" minOccurs="0"/>
+      <xs:element name="longDescription" type="xs:string" minOccurs="0"/>
+      <xs:element name="slot" type="equipSlot" minOccurs="0"/>
+      <xs:element name="damage" type="xs:int"/>
+      <xs:element name="piercing" type="xs:int"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="armorItem">
+    <xs:all>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="shortDescription" type="xs:string" minOccurs="0"/>
+      <xs:element name="longDescription" type="xs:string" minOccurs="0"/>
+      <xs:element name="slot" type="equipSlot" minOccurs="0"/>
+      <xs:element name="reduction" type="xs:int"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="gameExit">
+    <xs:all>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="position" type="exitPosition" minOccurs="0"/>
+      <xs:element name="locked" type="xs:boolean"/>
+      <xs:element name="blocked" type="xs:boolean"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="gameObject">
+    <xs:all>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="description" type="xs:string" minOccurs="0"/>
+      <xs:element name="activated" type="xs:boolean"/>
+      <xs:element name="requiresItem" type="xs:boolean"/>
+      <xs:element name="activationEvent" type="gameEvent" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="gameEvent">
+    <xs:all>
+      <xs:element name="type" type="eventType" minOccurs="0"/>
+      <xs:element name="exitTargetId" type="xs:string" minOccurs="0"/>
+      <xs:element name="damageTargetId" type="xs:string" minOccurs="0"/>
+      <xs:element name="droppedItems" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="healingItem" type="healingItem"/>
+              <xs:element name="useItem" type="useItem"/>
+              <xs:element name="weapon" type="weaponItem"/>
+              <xs:element name="armor" type="armorItem"/>
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="eventDialogue" type="dialogueLine" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="dialogueLine">
+    <xs:all>
+      <xs:element name="context" type="lineContext" minOccurs="0"/>
+      <xs:element name="text" type="xs:string" minOccurs="0"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="gameNPC">
+    <xs:all>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="health" type="xs:int"/>
+      <xs:element name="baseDamage" type="xs:int"/>
+      <xs:element name="equippedItems" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="weapon" type="weaponItem"/>
+              <xs:element name="armor" type="armorItem"/>
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="heldItems" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="healingItem" type="healingItem"/>
+              <xs:element name="useItem" type="useItem"/>
+              <xs:element name="weapon" type="weaponItem"/>
+              <xs:element name="armor" type="armorItem"/>
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="positionX" type="xs:int"/>
+      <xs:element name="positionY" type="xs:int"/>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="shortDescription" type="xs:string" minOccurs="0"/>
+      <xs:element name="longDescription" type="xs:string" minOccurs="0"/>
+      <xs:element name="hostile" type="xs:boolean"/>
+      <xs:element name="baseArmor" type="xs:int"/>
+      <xs:element name="roaming" type="xs:boolean"/>
+      <xs:element name="dialogueLines" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="dialogueLine" type="dialogueLine" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:complexType name="playerCharacter">
+    <xs:all>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="health" type="xs:int"/>
+      <xs:element name="baseDamage" type="xs:int"/>
+      <xs:element name="equippedItems" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="weapon" type="weaponItem"/>
+              <xs:element name="armor" type="armorItem"/>
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="heldItems" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+              <xs:element name="healingItem" type="healingItem"/>
+              <xs:element name="useItem" type="useItem"/>
+              <xs:element name="weapon" type="weaponItem"/>
+              <xs:element name="armor" type="armorItem"/>
+            </xs:choice>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="positionX" type="xs:int"/>
+      <xs:element name="positionY" type="xs:int"/>
+      <xs:element name="savedGame" type="xs:boolean"/>
+    </xs:all>
+  </xs:complexType>
+
+  <xs:simpleType name="equipSlot">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="HEAD"/>
+      <xs:enumeration value="TORSO"/>
+      <xs:enumeration value="LEGS"/>
+      <xs:enumeration value="HANDS"/>
+      <xs:enumeration value="FEET"/>
+      <xs:enumeration value="WEAPON"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="exitPosition">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="TOP"/>
+      <xs:enumeration value="BOTTOM"/>
+      <xs:enumeration value="LEFT"/>
+      <xs:enumeration value="RIGHT"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="eventType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="BLOCK"/>
+      <xs:enumeration value="UNBLOCK"/>
+      <xs:enumeration value="LOCK"/>
+      <xs:enumeration value="UNLOCK"/>
+      <xs:enumeration value="DAMAGE"/>
+      <xs:enumeration value="END"/>
+      <xs:enumeration value="ITEMDROP"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="lineContext">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="TALK"/>
+      <xs:enumeration value="ATTACK"/>
+      <xs:enumeration value="KILL"/>
+      <xs:enumeration value="DEATH"/>
+      <xs:enumeration value="EVENT"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+
