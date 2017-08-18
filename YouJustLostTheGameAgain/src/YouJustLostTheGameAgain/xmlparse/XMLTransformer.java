@@ -13,9 +13,13 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.bind.Unmarshaller;
+import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.Result;
+import javax.xml.transform.sax.SAXSource;
 import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
+
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
 
 import YouJustLostTheGameAgain.model.GameMap;
 import YouJustLostTheGameAgain.model.WeaponItem;
@@ -52,13 +56,15 @@ public class XMLTransformer {
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(GameMap.class);
 			Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-			bufferedReader = ClassLoader.class.getResourceAsStream(filepath);
-			if(bufferedReader != null) {
-				response = (GameMap) unmarshaller.unmarshal(new StreamSource(bufferedReader), GameMap.class).getValue();
-			} else {
-				System.out.println("Could not find file.");
-			}
-		} catch(JAXBException e) {
+			SAXParserFactory spf = SAXParserFactory.newInstance();
+	        spf.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+	        spf.setFeature("http://xml.org/sax/features/validation", false);
+
+	        XMLReader xmlReader = spf.newSAXParser().getXMLReader();
+	        InputSource inputSource = new InputSource(ClassLoader.class.getResource(filepath).getFile());
+	        SAXSource source = new SAXSource(xmlReader, inputSource);
+			response = (GameMap) unmarshaller.unmarshal(source, GameMap.class).getValue();
+		} catch(Exception e) {
 			log.log(Level.SEVERE, "Error:", e);
 			System.exit(1);
 		} finally {
