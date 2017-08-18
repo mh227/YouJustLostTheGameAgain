@@ -14,4 +14,24 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<filteredResources>
+		<filter>
+			<id>1503075529442</id>
+			<name>resources</name>
+			<type>5</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.andFilterMatcher</id>
+			</matcher>
+		</filter>
+	</filteredResources>
+	<variableList>
+		<variable>
+			<name>Resources</name>
+			<value>file:/C:/Users/Mike/Documents/CS%20222%20Workspace/YouJustLostTheGameAgain/resources</value>
+		</variable>
+		<variable>
+			<name>Story</name>
+			<value>file:/C:/Users/Mike/Documents/CS%20222%20Workspace/YouJustLostTheGameAgain/resources/story.xml</value>
+		</variable>
+	</variableList>
 </projectDescription>
