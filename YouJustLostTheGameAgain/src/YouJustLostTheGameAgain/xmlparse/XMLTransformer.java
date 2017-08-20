@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.SchemaOutputResolver;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.parsers.SAXParserFactory;
@@ -31,7 +32,8 @@ public class XMLTransformer {
 	public XMLTransformer() {}
 	
 	public static void main(String [] args) {
-		GameMap map = new XMLTransformer().transformAndReturn("/story.xml");
+		String filepath = chooseFile();
+		GameMap map = new XMLTransformer().transformAndReturn(filepath);
 		System.out.println(map.getMapIntro());
 		System.out.println(((WeaponItem)map.getRooms().get(0).getItems().get(0)).getDamage());
 		//new XMLTransformer().generateSchema();
@@ -61,7 +63,7 @@ public class XMLTransformer {
 	        spf.setFeature("http://xml.org/sax/features/validation", false);
 
 	        XMLReader xmlReader = spf.newSAXParser().getXMLReader();
-	        InputSource inputSource = new InputSource(ClassLoader.class.getResource(filepath).getFile());
+	        InputSource inputSource = new InputSource(filepath);
 	        SAXSource source = new SAXSource(xmlReader, inputSource);
 			response = (GameMap) unmarshaller.unmarshal(source, GameMap.class).getValue();
 		} catch(Exception e) {
@@ -78,6 +80,32 @@ public class XMLTransformer {
 			}
 		}
 		return response;
+	}
+	
+	public void saveGame(GameMap map) {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(new FileNameExtensionFilter("XML Files", "xml"));
+		String path = "";
+		int returnVal = chooser.showSaveDialog(null);
+	    if(returnVal == JFileChooser.APPROVE_OPTION) {
+	       path = chooser.getSelectedFile().getAbsolutePath();
+	    } else {
+	    	return;
+	    }
+	    try {
+	    	JAXBContext context = JAXBContext.newInstance(GameMap.class);
+	    	Marshaller marshaller = context.createMarshaller();
+	    	File file = new File(path);
+	    	if(!file.exists()) {
+	    		file.createNewFile();
+	    	}
+	    	marshaller.marshal(map, file);
+	    	
+	    } catch(Exception e) {
+			log.log(Level.SEVERE, "Error:", e);
+			System.exit(1);
+		}
+	    
 	}
 	
 	public void generateSchema() {
