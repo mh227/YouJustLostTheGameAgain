@@ -20,6 +20,9 @@ public abstract class GameCharacter {
 	@XmlElement(name = "health")
 	private int health = 0;
 	
+	@XmlElement(name = "maxHealth")
+	private int maxHealth = 0;
+	
 	@XmlElement(name = "baseDamage")
 	private int baseDamage = 0;
 	
@@ -59,6 +62,14 @@ public abstract class GameCharacter {
 	
 	public int getHealth() {
 		return health;
+	}
+	
+	public void setMaxHealth(int maxHealth) {
+		this.maxHealth = maxHealth;
+	}
+	
+	public int getMaxHealth() {
+		return maxHealth;
 	}
 	
 	public void setBaseDamage(int baseDamage) {

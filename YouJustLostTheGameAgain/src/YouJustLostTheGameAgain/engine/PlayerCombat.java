@@ -1,36 +1,37 @@
-package YouJustLostTheGameAgain.engin;
-import java.util.ArrayList;
+package YouJustLostTheGameAgain.engine;
+import java.util.List;
 import java.util.Random;
 
 import YouJustLostTheGameAgain.model.ArmorItem;
+import YouJustLostTheGameAgain.model.EquipItem;
 import YouJustLostTheGameAgain.model.GameCharacter;
 import YouJustLostTheGameAgain.model.GameItem;
+import YouJustLostTheGameAgain.model.GameMap;
 import YouJustLostTheGameAgain.model.GameNPC;
+import YouJustLostTheGameAgain.model.HealingItem;
 import YouJustLostTheGameAgain.model.PlayerCharacter;
 import YouJustLostTheGameAgain.model.UseItem;
 import YouJustLostTheGameAgain.model.WeaponItem;
-import YouJustLostTheGameAgain.model.HealingItem;
+import YouJustLostTheGameAgain.util.ModelUtil;
 
 public class PlayerCombat {
 
 	private PlayerCharacter player;
-	private ArrayList<GameNPC> enemies;
+	private List<GameNPC> enemies;
 	private Boolean combatHasEnded;
-	private final int ARMORSLOT = 1;
-	private final int WEAPONSLOT = 0;
 	private final int ESCAPEFAILUREVALUE = 9;	//This represents a 10% failure to escape chance when running from combat.
 	private final int ESCAPECHANCEBOUND = 100;	//Upper exclusive bound to escape chance on range from zero to upper bound.
 	
-	public PlayerCombat(PlayerCharacter activePlayer, ArrayList<GameNPC> enemyList) {
-		this.player = activePlayer;
-		this.enemies = enemyList;
+	public PlayerCombat(GameMap map) {
+		this.player = ModelUtil.getPlayer(map);
+		this.enemies = ModelUtil.getNPCsInRoom(map, player.getPositionX(), player.getPositionY());
 		this.combatHasEnded = false;
 	}
 	
 	public String preturnCombatantStates() {
 		StringBuilder fightersStatus = new StringBuilder("You take a deep breath and square off against:\n\n");  
 		GameNPC currentEnemy;
-		for(int enemyIndex = 1; enemyIndex <= enemies.size(); enemyIndex++){
+		for(int enemyIndex = 0; enemyIndex < enemies.size(); enemyIndex++){
 			currentEnemy = enemies.get(enemyIndex);
 			if(currentEnemy.getHealth() <= 0) {
 				fightersStatus.append("\nEnemy ").append(enemyIndex).append(": The corpse of the ").append(currentEnemy.getName())
@@ -45,31 +46,31 @@ public class PlayerCombat {
 		return fightersStatus.toString();
 	}
 	
-	public String playerTakesAction(String playersAction, int playersTarget) {
+	public String playerTakesAction(String playersAction, String playersTarget) {
 		//Start off players turn player can do one of three actions attack, run, flee:
 		Random rand = new Random();
-		switch (playersAction) {
+		switch (playersAction.toLowerCase()) {
 		case "attack":
-			if(attackConnects(player, enemies.get(playersTarget))) {
-				int damage = damage(player, enemies.get(playersTarget)); 
-				if(enemies.get(playersTarget).getHealth() <= 0) {
+			GameNPC targetedEnemy = ModelUtil.getNPCByName(enemies, playersTarget);
+			if(attackConnects(player, targetedEnemy)) {
+				int damage = damage(player, targetedEnemy); 
+				if(targetedEnemy.getHealth() <= 0) {
 					if(allEnemiesAreDead()) {
 						combatHasEnded = true;
 					}
 				}
-				return "You bring down your "+player.getEquippedItems().get(0)+" on "+enemies.get(playersTarget).getName()+" dealing "+damage+" damage.";
+				return "You bring down your "+ ModelUtil.getWeapon(player).getName() +" on "+ targetedEnemy.getName() +" dealing "+damage+" damage.";
 			}
 			else{
 				return "Your attack swings wide striking only air.";
 			}
-		break;
 		
 		//Handles using an item by determining which class the item is and how to handle that.
 		case "use item":
-			GameItem itemToBeUsed = player.getHeldItems().get(playersTarget);
+			GameItem itemToBeUsed = ModelUtil.getHeldItemByName(player, playersTarget);
 			
 			//Check if Item is healing Consumable and heal to either for items amount up to player's max health and subtract a use on the item.
-			if(itemToBeUsed instanceof HealingItem);{
+			if(itemToBeUsed instanceof HealingItem) {
 				int healAmount = ((HealingItem) itemToBeUsed).getAmountHealed();
 				int playerCurrentHealth = player.getHealth();
 				if((playerCurrentHealth + healAmount) > player.getMaxHealth()) {
@@ -87,15 +88,13 @@ public class PlayerCombat {
 			
 			//Swap equipped weapon with one in inventory
 			if(itemToBeUsed instanceof WeaponItem) {
-				player.getHeldItems().set(playersTarget, player.getEquippedItems().get(WEAPONSLOT));
-				player.getEquippedItems().set(WEAPONSLOT, ((WeaponItem) itemToBeUsed));
+				ModelUtil.setEquipped(player, (EquipItem) itemToBeUsed);
 				return "You sacrifice this round in favor of pulling out and weilding your "+itemToBeUsed.getName();
 			}
 			
 			//Swap equipped armor with one in inventory
 			if(itemToBeUsed instanceof ArmorItem) {
-				player.getHeldItems().set(playersTarget, player.getEquippedItems().get(ARMORSLOT));
-				player.getEquippedItems().set(ARMORSLOT, ((ArmorItem) itemToBeUsed));
+				ModelUtil.setEquipped(player, (EquipItem) itemToBeUsed);
 				return "You sacrifice this round in favor of dropping trou and pulling on "+itemToBeUsed.getName()+". You must have been an"
 						+ " incredible magician's assistance or exihibitionist in a past life";
 			}
@@ -106,7 +105,7 @@ public class PlayerCombat {
 			}
 		break;
 		
-		case "run Away":
+		case "run away":
 			int escapeChance = rand.nextInt(ESCAPECHANCEBOUND);//Change to escape is random number on bound of 100.
 		 	if(escapeChance > ESCAPEFAILUREVALUE) {
 				return "Your cool headed assement is that a tacticle retreat is the better part of valor or to put it another"
@@ -118,6 +117,7 @@ public class PlayerCombat {
 		 		return "You turn to leave but trip over your own feet. You manage to scramble back to your feet just in time to get attacked";
 		 	}
 		}
+		return "Command not understood.";
 	}
 
 	public String enemiesTurn() {
@@ -146,7 +146,7 @@ public class PlayerCombat {
 				}
 			}
 			else if(enemyAction <= 95 ) {
-				int maxHeal = Math.round(enemy.getMaxHealth()*0.15);
+				int maxHeal = (int) Math.round(enemy.getMaxHealth()*0.15);
 				int healing = rand.nextInt(maxHeal+1);
 				int currentHealth = enemy.getHealth();
 				if((healing+currentHealth)>= enemy.getMaxHealth()) {
@@ -167,14 +167,16 @@ public class PlayerCombat {
 	
 	private boolean attackConnects(GameCharacter attacker, GameCharacter defender) {
 		Random rand = new Random();
-		WeaponItem weapon = (WeaponItem) (attacker.getEquippedItems().get(WEAPONSLOT));
-				//(WeaponItem)(attacker.getEquippedItems().get(WEAPONSLOT)).getSlot();
+		WeaponItem weapon = ModelUtil.getWeapon(attacker);
+		int armorRating = ModelUtil.getArmorRating(defender);
 		//if((rand.nextInt(20)+1)+();
 		return false;
 	}
 	
 	private int damage(GameCharacter attacker, GameCharacter defender) {
 		Random rand = new Random();
+		WeaponItem weapon = ModelUtil.getWeapon(attacker);
+		int armorRating = ModelUtil.getArmorRating(defender);
 		return 0;
 	}
 
