@@ -53,13 +53,13 @@ public class ModelUtil {
 	
 	public static GameItem getHeldItemByName(GameCharacter cha, String name) {
 		SearchUtil<GameItem> util = new SearchUtil<GameItem>();
-		List<GameItem> items = util.select(new ArrayList<Object>(cha.getHeldItems()), item -> ((GameItem) item).getName().equals(name));
+		List<GameItem> items = util.select(new ArrayList<Object>(cha.getHeldItems()), item -> ((GameItem) item).getName().equalsIgnoreCase(name));
 		return items.isEmpty() ? null : items.get(0);
 	}
 	
 	public static GameNPC getNPCByName(List<GameNPC> npcs, String name) {
 		SearchUtil<GameNPC> util = new SearchUtil<GameNPC>();
-		List<GameNPC> n = util.select(new ArrayList<Object>(npcs), npc -> ((GameNPC) npc).getName().equals(name));
+		List<GameNPC> n = util.select(new ArrayList<Object>(npcs), npc -> ((GameNPC) npc).getName().equalsIgnoreCase(name));
 		return n.isEmpty() ? null : n.get(0);
 	}
 	
