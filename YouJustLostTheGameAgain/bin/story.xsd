@@ -209,6 +209,7 @@ elementFormDefault="qualified">
     <xs:all>
       <xs:element name="id" type="xs:string" minOccurs="0"/>
       <xs:element name="health" type="xs:int"/>
+      <xs:element name="maxHealth" type="xs:int"/>
       <xs:element name="baseDamage" type="xs:int"/>
       <xs:element name="equippedItems" minOccurs="0">
         <xs:complexType>

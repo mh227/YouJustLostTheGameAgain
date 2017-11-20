@@ -48,6 +48,7 @@ xsi:schemaLocation="https://www.w3schools.com story.xsd">
 		<player>
 			<id>player</id>
 			<health>100</health>
+			<maxHealth>100</maxHealth>
 			<baseDamage>1</baseDamage>
 			<equippedItems>
 				<weapon>
