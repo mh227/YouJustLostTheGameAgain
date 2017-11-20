@@ -17,7 +17,8 @@ public class ModelUtil {
 
 	public static WeaponItem getWeapon(GameCharacter cha) {
 		SearchUtil<WeaponItem> util = new SearchUtil<WeaponItem>();
-		return util.select(new ArrayList<Object>(cha.getEquippedItems()), equip -> ((EquipItem)equip).getSlot().equals(EquipSlot.WEAPON)).get(0);
+		List<WeaponItem> weapon = util.select(new ArrayList<Object>(cha.getEquippedItems()), equip -> ((EquipItem)equip).getSlot().equals(EquipSlot.WEAPON));
+		return weapon.isEmpty() ? null : weapon.get(0);
 	}
 	
 	public static List<ArmorItem> getArmor(GameCharacter cha) {
@@ -52,17 +53,20 @@ public class ModelUtil {
 	
 	public static GameItem getHeldItemByName(GameCharacter cha, String name) {
 		SearchUtil<GameItem> util = new SearchUtil<GameItem>();
-		return util.select(new ArrayList<Object>(cha.getHeldItems()), item -> ((GameItem) item).getName().equals(name)).get(0);
+		List<GameItem> items = util.select(new ArrayList<Object>(cha.getHeldItems()), item -> ((GameItem) item).getName().equals(name));
+		return items.isEmpty() ? null : items.get(0);
 	}
 	
 	public static GameNPC getNPCByName(List<GameNPC> npcs, String name) {
 		SearchUtil<GameNPC> util = new SearchUtil<GameNPC>();
-		return util.select(new ArrayList<Object>(npcs), npc -> ((GameNPC) npc).getName().equals(name)).get(0);
+		List<GameNPC> n = util.select(new ArrayList<Object>(npcs), npc -> ((GameNPC) npc).getName().equals(name));
+		return n.isEmpty() ? null : n.get(0);
 	}
 	
 	public static void setEquipped(GameCharacter cha, EquipItem item) {
 		SearchUtil<EquipItem> util = new SearchUtil<EquipItem>();
-		EquipItem oldItem = util.select(new ArrayList<Object>(cha.getEquippedItems()), i -> ((EquipItem) i).getSlot().equals(item.getSlot())).get(0);
+		List<EquipItem> equips = util.select(new ArrayList<Object>(cha.getEquippedItems()), i -> ((EquipItem) i).getSlot().equals(item.getSlot()));
+		EquipItem oldItem = equips.isEmpty() ? null : equips.get(0);
 		if(oldItem == null) {
 			cha.getEquippedItems().add(item);
 			cha.getHeldItems().remove(item);
