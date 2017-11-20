@@ -46,6 +46,8 @@ public class PlayerCombat {
 		return fightersStatus.toString();
 	}
 	
+	
+	//TODO: Guard against enemies/items not being found and therefore being null
 	public String playerTakesAction(String playersAction, String playersTarget) {
 		//Start off players turn player can do one of three actions attack, run, flee:
 		Random rand = new Random();
@@ -89,28 +91,28 @@ public class PlayerCombat {
 			//Swap equipped weapon with one in inventory
 			if(itemToBeUsed instanceof WeaponItem) {
 				ModelUtil.setEquipped(player, (EquipItem) itemToBeUsed);
-				return "You sacrifice this round in favor of pulling out and weilding your "+itemToBeUsed.getName();
+				return "You sacrifice this round in favor of pulling out and wielding your "+itemToBeUsed.getName();
 			}
 			
 			//Swap equipped armor with one in inventory
 			if(itemToBeUsed instanceof ArmorItem) {
 				ModelUtil.setEquipped(player, (EquipItem) itemToBeUsed);
-				return "You sacrifice this round in favor of dropping trou and pulling on "+itemToBeUsed.getName()+". You must have been an"
-						+ " incredible magician's assistance or exihibitionist in a past life";
+				return "You sacrifice this round in favor of putting on "+itemToBeUsed.getName()+". You must have been an"
+						+ " incredible magician's assistant or an exihibitionist in a past life";
 			}
 			
 			//In case a key item is used in combat.
 			if(itemToBeUsed instanceof UseItem) {
-				return "There is a time and place for everything but this is definitly not it.";
+				return "There is a time and place for everything but this is definitely not it.";
 			}
 		break;
 		
 		case "run away":
 			int escapeChance = rand.nextInt(ESCAPECHANCEBOUND);//Change to escape is random number on bound of 100.
 		 	if(escapeChance > ESCAPEFAILUREVALUE) {
-				return "Your cool headed assement is that a tacticle retreat is the better part of valor or to put it another"
-									+ " way the enemy can't keep up with you while bowled over laughing at the sight of your chicken headed"
-									+ " flight from them. Maybe you should train some more before going back into combat or at least change"
+				return "Your cool headed assessment is that a tactical retreat is the better part of valor, or to put it another"
+									+ " way, the enemy can't keep up with you while bowling over laughing at the sight of your chicken-headed"
+									+ " flight from them. Maybe you should train some more before going back into combat - or at least change"
 									+ " your pants.";
 		 	}
 		 	else {
@@ -129,20 +131,20 @@ public class PlayerCombat {
 				continue;
 			}
 			
-			//enemies action: simple behavior 60% to attack, 35% to heal, and 5% to flee;
+			//enemies action: simple behavior 60% to attack, 35% to heal, and 5% to flee
 			enemyAction = rand.nextInt(100);
 			if(enemyAction <= 60 ) {
 				if(attackConnects(enemy, player)) {
 					int damage = damage(enemy, player);
 					enemyTurn.append(enemy.getName()+" attacks and deals "+damage+" to you.\n\n");
 					if(player.getHealth()<=0) {
-						enemyTurn.append(enemy.getName()+" rips out your throat and tosses your dieing corpse to the ground");
+						enemyTurn.append(enemy.getName()+" rips out your throat and tosses your dying corpse to the ground");
 						combatHasEnded = true;
 						return enemyTurn.toString();
 					}
 				}
 				else {
-					enemyTurn.append("Dipping left and then right you mannage to dive out of the way of "+enemy.getName()+"'s attack.\n\n");
+					enemyTurn.append("Dipping left and then right you manage to dive out of the way of "+enemy.getName()+"'s attack.\n\n");
 				}
 			}
 			else if(enemyAction <= 95 ) {
