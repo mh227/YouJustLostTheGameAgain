@@ -7,6 +7,9 @@ import javax.xml.bind.annotation.XmlElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GameObject {
 	
+	@XmlElement(name = "name")
+	private String name = "";
+	
 	@XmlElement(name = "id")
 	private String id = "";
 	
@@ -21,6 +24,14 @@ public class GameObject {
 	
 	@XmlElement(name = "activationEvent")
 	private GameEvent activationEvent;
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getName() {
+		return name;
+	}
 	
 	public void setId(String id) {
 		this.id = id;

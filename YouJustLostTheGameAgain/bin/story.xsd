@@ -119,11 +119,19 @@ elementFormDefault="qualified">
       <xs:element name="position" type="exitPosition" minOccurs="0"/>
       <xs:element name="locked" type="xs:boolean"/>
       <xs:element name="blocked" type="xs:boolean"/>
+      <xs:element name="events" minOccurs="0">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="event" type="gameEvent" minOccurs="0" maxOccurs="unbounded"/>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
     </xs:all>
   </xs:complexType>
 
   <xs:complexType name="gameObject">
     <xs:all>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
       <xs:element name="id" type="xs:string" minOccurs="0"/>
       <xs:element name="description" type="xs:string" minOccurs="0"/>
       <xs:element name="activated" type="xs:boolean"/>
@@ -164,6 +172,7 @@ elementFormDefault="qualified">
     <xs:all>
       <xs:element name="id" type="xs:string" minOccurs="0"/>
       <xs:element name="health" type="xs:int"/>
+      <xs:element name="maxHealth" type="xs:int"/>
       <xs:element name="baseDamage" type="xs:int"/>
       <xs:element name="equippedItems" minOccurs="0">
         <xs:complexType>
@@ -268,6 +277,7 @@ elementFormDefault="qualified">
       <xs:enumeration value="DAMAGE"/>
       <xs:enumeration value="END"/>
       <xs:enumeration value="ITEMDROP"/>
+      <xs:enumeration value="DIALOGUE"/>
     </xs:restriction>
   </xs:simpleType>
 

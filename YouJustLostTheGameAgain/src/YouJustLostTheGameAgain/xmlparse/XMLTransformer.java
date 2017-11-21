@@ -52,7 +52,7 @@ public class XMLTransformer {
 	    }
 	}
 	
-	public GameMap transformAndReturn(String filepath) {
+	public static GameMap transformAndReturn(String filepath) {
 		GameMap response = null;
 		InputStream bufferedReader = null;
 		try {

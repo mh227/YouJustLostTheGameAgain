@@ -19,7 +19,8 @@ public class GameEvent {
 		UNLOCK,
 		DAMAGE,
 		END,
-		ITEMDROP
+		ITEMDROP,
+		DIALOGUE
 	}
 	
 	@XmlElement(name = "type")
