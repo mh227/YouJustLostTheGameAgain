@@ -15,7 +15,7 @@ public class XMLTransformerTest {
 	
 	@BeforeEach
 	public void setup() {
-		map = XMLTransformer.transformAndReturn("YouJustLostTheGameAgain/resources/testStory.xml");
+		map = XMLTransformer.transformAndReturn("resources/testStory.xml");
 	}
 	
 	@Test

@@ -48,7 +48,7 @@ public class XMLTransformer {
 	    }
 	    else{
 	    	JOptionPane.showMessageDialog(null, "You did not choose a file. Reverting to default.");
-	    	return "/story.xml";
+	    	return "resources/story.xml";
 	    }
 	}
 	
