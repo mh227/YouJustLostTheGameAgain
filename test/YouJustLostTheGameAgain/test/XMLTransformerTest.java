@@ -22,5 +22,10 @@ public class XMLTransformerTest {
 	public void testMapNotNull() {
 		Assertions.assertTrue(map != null);
 	}
+	
+	@Test
+	public void testMapNotEmpty() {
+		Assertions.assertFalse(map.equals(new GameMap()));
+	}
 
 }
