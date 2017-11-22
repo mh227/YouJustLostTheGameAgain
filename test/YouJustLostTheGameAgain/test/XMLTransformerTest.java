@@ -1,7 +1,5 @@
 package YouJustLostTheGameAgain.test;
 
-import java.io.File;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
