@@ -13,7 +13,7 @@ public class XMLTransformerTest {
 	
 	@BeforeEach
 	public void setup() {
-		map = XMLTransformer.transformAndReturn("resources/testStory.xml");
+		map = XMLTransformer.transformAndReturn("src/test/resources/testStory.xml");
 	}
 	
 	@Test
